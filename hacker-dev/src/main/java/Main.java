@@ -21,37 +21,28 @@ class Main {
 			names.add(scanner.next());
 	}
 
-	boolean match(String first, String second) {
-		int length = first.length();
-		for (int i = 0; i < length; i++)
-			if ((first.charAt(i) != STAR) && first.charAt(i) != second.charAt(i))
+	boolean match(int position, String second) {
+		//thay * vao vi tri position
+		for (int i = 0; i < second.length(); i++)
+			if ((i != position) && (s.charAt(i) != STAR) && (s.charAt(i) != second.charAt(i)))
 				return false;
 		return true;
 	}
 
-	int calculateNumMatch(String str) {
+	int calculateNumMatch(int position) {
 		int result = 0;
 		for (String s : names)
-			if (match(str, s))
+			if (match(position, s))
 				result++;
 		return result;
 	}
 
 	void process() {
-		int max = calculateNumMatch(s);
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) != STAR) {
-				StringBuilder builder = new StringBuilder(s.length());
-				for (int tmp = 0; tmp < s.length(); tmp++)
-					if (i != tmp)
-						builder.append(s.charAt(tmp));
-					else
-						builder.append(STAR);
-				String test = builder.toString();
-				int num = calculateNumMatch(test);
-				if (max < num)
-					max = num;
-			}
+		int max = 0;
+		for (int i = -1; i < s.length(); i++) {
+			int num = calculateNumMatch(i);
+			if (max < num)
+				max = num;
 		}
 		System.out.println(max);
 	}
