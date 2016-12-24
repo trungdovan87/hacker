@@ -45,57 +45,106 @@ class Main {
 		}
 	}
 
-	void recursive(int i, int j) {
-		int k = x.length() - n.length() + i;
+	void solution() {
 
-		if (i >= n.length() || j >= x.length())
-			return;
-		for (int tmp = j; tmp < k; tmp++)
-			if (n.charAt(i) == x.charAt(tmp)) {
-				a[tmp] = i;
-				for (int linhtinh = j; linhtinh < tmp; linhtinh++) {
-					a[linhtinh] = -2;
-				}
-				recursive(i + 1, tmp + 1);
+		int i = 0;
+		int j = 0;
+
+		while (true) {
+			if (i >= n.length() || j >= x.length())
 				return;
-			}
-
-		// 2 xau con lai co do dai bang nhau
-		if (n.charAt(i) < x.charAt(k)) {
-			// neu n[i] < x[k]
-			a[k] = i;
-			for (int tmp = k + 1; tmp < n.length(); tmp++)
-				a[tmp] = tmp;
-			return;
-		}
-
-		if (n.charAt(i) == x.charAt(k)) {
-			if (compareLastDigit(i + 1, k + 1) <= 0) {
-				// xau N <= xau X
+			int k = x.length() - n.length() + i;
+			boolean isContinue = false;
+			for (int tmp = j; tmp < k; tmp++)
+				if (n.charAt(i) == x.charAt(tmp)) {
+					a[tmp] = i;
+					for (int linhtinh = j; linhtinh < tmp; linhtinh++) {
+						a[linhtinh] = -2;
+					}
+					//recursive(i + 1, tmp + 1);
+					i = i + 1;
+					j = tmp + 1;
+					isContinue = true;
+					break;
+				}
+			if (isContinue)
+				continue;
+			// 2 xau con lai co do dai bang nhau
+			if (n.charAt(i) < x.charAt(k)) {
+				// neu n[i..] < x[k..]
+				a[k] = i;
 				for (int tmp = k + 1; tmp < n.length(); tmp++)
 					a[tmp] = tmp;
 				return;
-			} else { // neu no lon hon, xu ly giong ben duoi
+			}
+
+			if (n.charAt(i) == x.charAt(k)) {
+				if (compareLastDigit(i + 1, k + 1) <= 0) {
+					// xau N <= xau X
+					for (int tmp = k + 1; tmp < n.length(); tmp++)
+						a[tmp] = tmp;
+					return;
+				} else { // neu no lon hon, xu ly giong ben duoi
+					cutTail(i, k);
+					return;
+				}
+			}
+			if (n.charAt(i) > x.charAt(k)) {
 				cutTail(i, k);
 				return;
 			}
 		}
-		if (n.charAt(i) > x.charAt(k)) {
-			cutTail(i, k);
-			return;
-		}
 	}
+
+//	void recursive(int i, int j) {
+//		int k = x.length() - n.length() + i;
+//
+//		if (i >= n.length() || j >= x.length())
+//			return;
+//		for (int tmp = j; tmp < k; tmp++)
+//			if (n.charAt(i) == x.charAt(tmp)) {
+//				a[tmp] = i;
+//				for (int linhtinh = j; linhtinh < tmp; linhtinh++) {
+//					a[linhtinh] = -2;
+//				}
+//				recursive(i + 1, tmp + 1);
+//				return;
+//			}
+//
+//		// 2 xau con lai co do dai bang nhau
+//		if (n.charAt(i) < x.charAt(k)) {
+//			// neu n[i] < x[k]
+//			a[k] = i;
+//			for (int tmp = k + 1; tmp < n.length(); tmp++)
+//				a[tmp] = tmp;
+//			return;
+//		}
+//
+//		if (n.charAt(i) == x.charAt(k)) {
+//			if (compareLastDigit(i + 1, k + 1) <= 0) {
+//				// xau N <= xau X
+//				for (int tmp = k + 1; tmp < n.length(); tmp++)
+//					a[tmp] = tmp;
+//				return;
+//			} else { // neu no lon hon, xu ly giong ben duoi
+//				cutTail(i, k);
+//				return;
+//			}
+//		}
+//		if (n.charAt(i) > x.charAt(k)) {
+//			cutTail(i, k);
+//			return;
+//		}
+//	}
 
 	void output() {
 		int[] kq = new int[x.length()];
 		int i;
 
-//		for (i = 0; i < a.length; i++) {
+//		for (i = 0; i < a.length; i++)
 //			System.out.println(a[i]);
-//		}
-//
 //		System.out.println("--------------");
-		//--------
+//		//--------
 		for (i = 0; i < a.length; i++) {
 			kq[i] = -1;
 		}
@@ -169,7 +218,7 @@ class Main {
 			return;
 		}
 		init();
-		recursive(0, 0);
+		solution();
 		output();
 	}
 
