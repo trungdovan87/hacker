@@ -1,6 +1,18 @@
 a*c
-4
+6
+abc: -1
+add: 2
+agd: 2
+axy: 2
+bcc: 0
+def: -2
+
+a*c
+7
 abc
-add
-agd
-axy
+add 
+agd 
+axy 
+bcc 
+def
+ake
