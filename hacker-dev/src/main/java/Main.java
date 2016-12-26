@@ -1,7 +1,7 @@
 /**
  * Two Robot
  * https://www.hackerrank.com/challenges/two-robots
- * point: 11/15
+ * point: 15/15
  */
 
 import java.util.*;
@@ -20,9 +20,9 @@ public class Main {
 		@Override
 		public int hashCode() {
 			if (x <= y)
-				return x << 10 + y;
+				return (x << 10) + y;
 			else
-				return y << 10 + x;
+				return (y << 10) + x;
 		}
 
 		@Override
@@ -51,21 +51,20 @@ public class Main {
 		}
 	}
 
-	private Map<Point2D,Integer> calculateNext(Map<Point2D, Integer> current, Point2D move) {
+	private Map<Point2D,Integer> calculateNext(Map<Point2D, Integer> current, int a, int b) {
 		Map<Point2D, Integer> next = new HashMap();
 		current.keySet().forEach( key -> {
 			int f = current.get(key);
 			// f(b, y) = f(x, y) + distance(x, a)
-			putNew(next, new Point2D(move.y, key.y), f + distance(key.x, move.x) );
+			putNew(next, new Point2D(b, key.y), f + distance(key.x, a) );
 
 			// f(x, b) = f(x, y) + distance(y, a)
-			putNew(next, new Point2D(key.x, move.y), f + distance(key.y, move.x));
+			putNew(next, new Point2D(key.x, b), f + distance(key.y, a));
 		});
 		return next;
 	}
 
 	void run() {
-
 		Scanner scan = new Scanner(System.in);
 		t = scan.nextInt();
 		long now = System.currentTimeMillis();
@@ -81,7 +80,7 @@ public class Main {
 				int a = scan.nextInt();
 				int b = scan.nextInt();
 				result += Math.abs(a - b);
-				current = calculateNext(current, new Point2D(a, b));
+				current = calculateNext(current, a, b);
 			}
 			int min = Collections.min(current.values());
 			System.out.println(min + result);
@@ -92,11 +91,9 @@ public class Main {
 			System.out.println("time (ms): " + (System.currentTimeMillis() - now));
 	}
 
-	static boolean debug = true;
+	static boolean debug = false;
 
 	public static void main(String args[]) throws Exception {
-		long now = System.currentTimeMillis();
 		new Main().run();
-
 	}
 }
