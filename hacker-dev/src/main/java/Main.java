@@ -68,6 +68,7 @@ public class Main {
 
 		Scanner scan = new Scanner(System.in);
 		t = scan.nextInt();
+		long now = System.currentTimeMillis();
 		for (int l1 = 0; l1 < t; l1++) {
 			m = scan.nextInt();
 			n = scan.nextInt();
@@ -87,14 +88,15 @@ public class Main {
 		}
 
 		scan.close();
+		if (debug)
+			System.out.println("time (ms): " + (System.currentTimeMillis() - now));
 	}
 
-	static boolean debug = false;
+	static boolean debug = true;
 
 	public static void main(String args[]) throws Exception {
 		long now = System.currentTimeMillis();
 		new Main().run();
-		if (debug)
-			System.out.println("time (ms): " + (System.currentTimeMillis() - now));
+
 	}
 }
