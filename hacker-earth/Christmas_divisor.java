@@ -4,6 +4,18 @@
  * point: 100/100
  */
 
+/*
+Cach dem: 1 1 1
+0 0 0
+0 0 1
+0 1 1
+0 1 0
+1 1 0
+1 1 1
+1 0 1
+1 0 0
+*/
+
 import java.util.Scanner;
 
 public class Main {
