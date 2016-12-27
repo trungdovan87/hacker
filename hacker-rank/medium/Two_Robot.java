@@ -20,9 +20,9 @@ public class Main {
 		@Override
 		public int hashCode() {
 			if (x <= y)
-				return (x << 10) + y;
+				return (x << 10) | y;
 			else
-				return (y << 10) + x;
+				return (y << 10) | x;
 		}
 
 		@Override
@@ -43,12 +43,8 @@ public class Main {
 
 	void putNew(Map<Point2D, Integer> next, Point2D point, int value) {
 		Integer oldValue = next.get(point);
-		if (oldValue == null)
+		if (oldValue == null || oldValue > value)
 			next.put(point, value);
-		else {
-			if (oldValue > value)
-				next.put(point, value);
-		}
 	}
 
 	private Map<Point2D,Integer> calculateNext(Map<Point2D, Integer> current, int a, int b) {
@@ -82,8 +78,7 @@ public class Main {
 				result += Math.abs(a - b);
 				current = calculateNext(current, a, b);
 			}
-			int min = Collections.min(current.values());
-			System.out.println(min + result);
+			System.out.println(result +  Collections.min(current.values()));
 		}
 
 		scan.close();
