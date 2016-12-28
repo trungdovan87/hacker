@@ -1,0 +1,2 @@
+https://www.hackerrank.com/contests/projecteuler/challenges/euler169
+solution: https://www.nayuki.io/page/project-euler-solutions
