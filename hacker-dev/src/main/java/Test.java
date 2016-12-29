@@ -25,9 +25,12 @@ public class Test {
 		return (hoanvi(l) % l == 0);
 	}
 
-	boolean isRepeated(long l) {
-		String s = String.valueOf(l);
-		for (int i = 0; i < s.length(); i++) {
+	boolean firsDigitLarger5(String s) {
+		return (s.charAt(0) - '0') >= 5;
+	}
+
+	boolean isRepeated(String s) {
+		for (int i = 1; i < s.length(); i++) {
 			if (s.charAt(0) != s.charAt(i))
 				return false;
 		}
@@ -67,6 +70,7 @@ public class Test {
 //		System.out.println(check(1428578));
 		long min = (long) Math.pow(10, 1);
 		long max = (long) Math.pow(10, 10);
+		min = 790922193102l;
 		max = Long.MAX_VALUE;
 
 		//11
@@ -75,11 +79,29 @@ public class Test {
 				Executors.newScheduledThreadPool(2);
 		scheduler.scheduleWithFixedDelay(() -> writeLineToFile("i.txt", "i: " + l), 0, 15, TimeUnit.MINUTES);
 
-
-		for (l = min; l <= max; l++) {
-			if (check(l) && !isRepeated(l)) {
-				System.out.println(l);
-				writeLineToFile("number.txt", String.valueOf(l));
+		l = min;
+		while (l <= max) {
+			String s = String.valueOf(l);
+			if (s.charAt(0) >= '5') {
+				StringBuilder next = new StringBuilder("1");
+				for (int i = 0; i < s.length(); i++)
+					next.append('0');
+				l = Long.valueOf(next.toString());
+			} else {
+				if (check(l)) {
+					boolean repeated = true;
+					for (int i = 1; i < s.length(); i++) {
+						if (s.charAt(0) != s.charAt(i)) {
+							repeated = false;
+							break;
+						}
+					}
+					if (!repeated) {
+						System.out.println(l);
+						writeLineToFile("number.txt", String.valueOf(l));
+					}
+				}
+				l++;
 			}
 		}
 		System.exit(0);
