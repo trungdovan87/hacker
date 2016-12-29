@@ -9,6 +9,7 @@
  */
 
 /**
+ Exception with 6
  102564
  128205
  142857
@@ -18,6 +19,11 @@
  230769
 
  sum: 1142856
+ ---------
+
+ Exception with 6
+ 1012658227848
+
  */
 
 import java.util.*;
@@ -25,7 +31,8 @@ import java.util.*;
 public class Main {
 	final int MOD = 100000;
 	final int fourfive = 45;
-	final int exceptions = 42856;
+	final int exceptions6 = 42856;
+	final int exceptions13 = 27848;
 
 	int mod(int value) {
 		return value % MOD;
@@ -40,11 +47,12 @@ public class Main {
 			return mod( 1111 * fourfive);
 		if (n == 5)
 			return mod(11111 * fourfive);
-		if (n % 6 != 0)
-			return mod(11111 * fourfive);
-		else
-		//if n % 6 == 0
-			return mod(11111 * fourfive + exceptions);
+		int result = mod(11111 * fourfive);
+		if (n % 6 == 0)
+			result = mod(result + exceptions6);
+		if (n % 13 == 0)
+			result = mod(result + exceptions13);
+		return result;
 	}
 
 	int process(int n) {
