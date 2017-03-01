@@ -1,5 +1,5 @@
 /**
- * Project Euler #9: Special P
+ * Project Euler #9: Special Pythagorean
  * https://www.hackerrank.com/contests/projecteuler/challenges/euler009
  * point: 100/100
  */
@@ -26,7 +26,7 @@ public class Main {
       int c = calculate(n, a);
       if (c > 0) {
         int b = n - a - c;
-        if (c < (a + b)) {
+        if (b > 0) {
           int product = a * b * c;
           if (max < product) {
             max = product;
