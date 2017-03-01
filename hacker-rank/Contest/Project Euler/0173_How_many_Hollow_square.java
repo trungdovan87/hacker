@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  * Solution: a ^ 2 - b ^ 2 <= n
- * a = b + k (k is even)
+ * a = b + k (b, k > 0; k is even, means k % 2 = 0)
  * => b <= (n/k - k) / 2
  */
 public class Main {
