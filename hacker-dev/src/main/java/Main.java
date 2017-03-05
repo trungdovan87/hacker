@@ -4,23 +4,15 @@
  * point: 100/100
  */
 
+import java.util.Arrays;
+import java.util.Scanner;
+
 /**
  * Solution: a ^ 2 - b ^ 2 <= n
  * a = b + k (k is even)
  * => b <= (n/k - k) / 2
  */
 public class Main {
-  public static void main(String[] args) {
-    new Main().run();
-  }
-
-  void run() {
-//    Scanner in = new Scanner(System.in);
-//    long n = in.nextLong();
-//    System.out.println(resolve(n));
-    init();
-  }
-
   long calculateB(long n, long k) {
     return (long) ((double) n / k - k) / 2;
   }
@@ -34,8 +26,6 @@ public class Main {
           if (b2 % 2 == 0) {
             int b = b2 / 2;
             int a = b + k;
-            System.out.println("i = " + k + ", k = " + b2);
-            System.out.println(" a= " + a + ", b = " + b);
             result++;
           }
         }
@@ -43,46 +33,56 @@ public class Main {
     }
     return result;
   }
-
+  int MAX = 1000000;
   private int[] calTypeArray() {
-    int MAX = 1000000;
-//    MAX = 100000;
+
+//    MAX = 10;
     int TOP = (int) Math.sqrt(MAX);
-    int[] result = new int[MAX + 1];
+    int[] types = new int[MAX + 1];
     for (int k = 2; k <= TOP; k += 2) {
       int b2 = 2;
       while (true) {
         int product = k * (k + b2);
         if (product > MAX)
           break;
-        result[product]++;
+        types[product]++;
         b2 += 2;
       }
     }
-    return result;
+    return types;
   }
-
+  int[] types;
+  int[] result;
   long init() {
-
-//    for (int i = 0; i < result.length; i++) {
-////      System.out.println("i = " + i + ", kq[i] = " + result[i]);
-//      if (result[i] != calType(i)) {
-//        System.out.println("wrong i = " + i);
-//        System.out.println("result[i] = " + result[i]);
-//        System.out.println("N(i) = " + calType(i));
-//      }
-//    }
-    int[] result = calTypeArray();
-    int kq = 0;
-    for (int i = 0; i < result.length; i++) {
-      if (result[i] >= 1 && result[i] <= 10) {
-        System.out.println("i : " + i);
-        kq++;
+    types = calTypeArray();
+    result = new int[MAX + 1];
+    for (int i = 1; i <= MAX; i++) {
+      if (types[i] >= 1 && types[i] <= 10) {
+        result[i] = result[i-1] + 1;
+      } else {
+        result[i] = result[i-1];
       }
     }
-
-    System.out.println("kq: " + kq);
-    System.out.println("N(n) " + calType(996624));
     return 1;
   }
+
+
+  void run() {
+    init();
+    Scanner in = new Scanner(System.in);
+    int t = in.nextInt();
+    int[] input = new int[MAX + 1];
+    for (int i = 0; i < t; i++) {
+      int k = in.nextInt();
+      System.out.println(result[k]);
+    }
+    for (int i = 0; i < t; i++) {
+      System.out.println(result[input[i]]);
+    }
+  }
+
+  public static void main(String[] args) {
+    new Main().run();
+  }
+
 }
