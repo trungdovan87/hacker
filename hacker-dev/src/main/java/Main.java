@@ -1,7 +1,5 @@
 /**
- * Project Euler #174: Counting the number of "hollow" square laminae that can form one, two, three, ... distinct arrangements
- * https://www.hackerrank.com/challenges/recursive-digit-sum
- * point: 100/100
+ * We
  */
 
 import java.util.ArrayList;
@@ -19,6 +17,11 @@ public class Main {
       this.y = y;
     }
 
+    /**
+     * @param matrix Matrix Transformer.
+     * @return next Position after transformation
+     * idea: |x y 1| x Matrix = |x' y' 1|
+     */
     Position applyMatrix(Matrix33 matrix) {
       int x = this.x * matrix.a[0][0] + this.y * matrix.a[1][0] + matrix.a[2][0];
       int y = this.x * matrix.a[0][1] + this.y * matrix.a[1][1] + matrix.a[2][1];
@@ -78,13 +81,13 @@ public class Main {
      * @param (p, q) is pivot point
      * @return matrix for Composite Transformation:
      *    90 degree rotation of a point(x, y) about a pivot point(p, q)
-          | 0      1    0|
-          |-1      0    0|
-          |p+q   -p+q   1|
-
-     and |x y 1| * Matrix = |x' y' 1|
+     *     | 0      1    0|
+     *     |-1      0    0|
+     *     |p+q   -p+q   1|
+     *
+     *    and |x y 1| * Matrix = |x' y' 1|
      */
-    static Matrix33 createMatrixK(int p, int q) {
+    static Matrix33 createMatrixPQ(int p, int q) {
       Matrix33 matrix = new Matrix33();
       matrix.a[0][1] = 1;
 
@@ -95,9 +98,32 @@ public class Main {
       matrix.a[2][2] = 1;
       return matrix;
     }
+
+    static Matrix33 createMatrixPivot(Position center) {
+      return createMatrixPQ(center.x, center.y);
+    }
+  }
+
+  /**
+   * a, b, d is always even.
+   */
+  Position calculateCenter(Command command){
+    return new Position(command.a + command.d / 2, command.b + command.d / 2);
   }
 
   void process(int N, List<Position> L, List<Command> S) {
+    List<Matrix33> matrixList = new ArrayList<>(S.size());
+    if (!S.isEmpty()) {
+      Command command = S.get(0);
+      Position center = calculateCenter(command);
+      matrixList.add(Matrix33.createMatrixPivot(center));
+    }
+
+    for (int i = 1; i < S.size(); i++) {
+      Command command = S.get(0);
+      Position center = calculateCenter(command);
+      matrixList.add(matrixList.get(i - 1).multiple(Matrix33.createMatrixPivot(center)));
+    }
   }
 
   void run() {
@@ -106,9 +132,15 @@ public class Main {
     int s = scanner.nextInt();
     List<Command> S = new ArrayList<>();
     for (int i = 0; i < s; i++) {
-      int a = scanner.nextInt() - 1;
       int b = scanner.nextInt() - 1;
+      int a = scanner.nextInt() - 1;
       int d = scanner.nextInt();
+      a *= 2;
+      b *= 2;
+      d *= 2;
+      if (debug) {
+        System.out.println(String.format("a, b, d = %d, %d, %d", a, b, d));
+      }
       S.add(new Command(a, b, d));
     }
 
@@ -119,35 +151,51 @@ public class Main {
       long next = scanner.nextLong();
       int x = (int) (next % N);
       int y = (int) (next / N);
+
+      if (y >= N) {
+        throw new IllegalArgumentException(String.format("l >= N^2 with (l = %d, N = %d)", next, N));
+      }
+      x *= 2;
+      y *= 2;
+
       L.add(new Position(x, y));
       if (debug) {
-        System.out.println("x, y = " + x + " " + y);
+        System.out.println(String.format("x, y = %d, %d", x, y));
       }
     }
     process(N, L, S);
   }
 
   void testMutipleMatrix() {
-    Matrix33 matrix33 = Matrix33.createMatrixK(1000, 10);
+    Matrix33 matrix33 = Matrix33.createMatrixPQ(1000, 10);
     System.out.println(matrix33);
     for (int i = 0; i < 1000; i++) {
-      matrix33 = matrix33.multiple(Matrix33.createMatrixK(1000, 10));
+      matrix33 = matrix33.multiple(Matrix33.createMatrixPQ(1000, 10));
       System.out.println(matrix33);
     }
   }
 
   void testApplyMatrix() {
-    Position position = new Position(4 , 3);
-    System.out.println(position.applyMatrix(Matrix33.createMatrixK(3, 2)));
+    Position position = new Position(5 * 2 , 1 * 2);
+    System.out.println(position);
+    Matrix33 m1 = Matrix33.createMatrixPQ(3 * 2, 2 * 2);
+    Position position1 = position.applyMatrix(m1);
+    System.out.println(position1);
+
+    Matrix33 m2 = Matrix33.createMatrixPQ(7, 5);
+    Position position2 = position1.applyMatrix(m2);
+    System.out.println(position2);
+
+    System.out.println("----- Final: " + position.applyMatrix(m1.multiple(m2)));
   }
 
 
   static boolean debug = true;
 
   public static void main(String[] args) {
-//    new Main().run();
+    new Main().run();
 //    new Main().testMutipleMatrix();
-    new Main().testApplyMatrix();
+//    new Main().testApplyMatrix();
   }
 
 
