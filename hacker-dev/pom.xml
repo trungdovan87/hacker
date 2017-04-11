@@ -24,12 +24,11 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
-                        ...
                         <goals>
                         <goal>exec</goal>
                         </goals>
                     </execution>
-                    </executions>
+                </executions>
                 <configuration>
                 <executable>maven</executable>
                 <!-- optional -->
