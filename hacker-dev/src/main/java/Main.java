@@ -9,9 +9,9 @@
  *
  * And we use 2 algorithm: Matrix Multiplication + Binary Search
  * - Complex of this Solution is: n * log(n) = L * log(S)
- * - In Worst Case, it take 0.5s
+ * - In Worst Case, it take 500ms
  *
- *
+ * 
  */
 
 import java.util.ArrayList;
@@ -67,6 +67,8 @@ public class Main {
         System.out.println(String.format("x, y = %d, %d", x, y));
       }
     }
+
+    //resolve
     new Problem().process(L, S);
   }
 
@@ -95,7 +97,7 @@ public class Main {
     System.out.println("-- Done!!!!");
     System.out.println(String.format("-- Time: %d (ms)", (System.currentTimeMillis() - now)));
   }
-  
+
   static class Position {
     int x, y;
 
@@ -106,7 +108,7 @@ public class Main {
 
     /**
      * @param matrix Matrix Transformer.
-     * @return next Position after transformation
+     * @return new Position after transformation <br/>
      * idea: |x y 1| x Matrix = |x' y' 1|
      */
     Position applyMatrix(Matrix33 matrix) {
@@ -135,6 +137,7 @@ public class Main {
     int[][] a = new int[3][3];
 
     /**
+     * create a Transformer Matrix from pivot(p, q)
      * @param (p,q) is pivot point
      * @return matrix for Transformation <br/>
      * 90 degree rotation of a point(x, y) about a pivot point(p, q) <br/>
@@ -156,8 +159,12 @@ public class Main {
       return matrix;
     }
 
-    static Matrix33 createMatrixPivot(Position center) {
-      return createMatrixPQ(center.x, center.y);
+    /**
+     * @param pivot of rotation
+     * @return
+     */
+    static Matrix33 createMatrixWithPivot(Position pivot) {
+      return createMatrixPQ(pivot.x, pivot.y);
     }
 
     Matrix33 multiple(Matrix33 matrix) {
@@ -195,7 +202,7 @@ public class Main {
     List<Position> L;
     List<Command> S;
 
-    // check w
+    // check whether position is in Square from cmd.
     private static boolean isInSquare(Position position, Command cmd) {
       return (position.x >= cmd.a &&  position.x <= cmd.a + cmd.d && position.y >= cmd.b && position.y <= cmd.b + cmd.d);
     }
@@ -212,13 +219,13 @@ public class Main {
       if (!S.isEmpty()) {
         Command command = S.get(0);
         Position center = calculateCenter(command);
-        matrixList.add(Matrix33.createMatrixPivot(center));
+        matrixList.add(Matrix33.createMatrixWithPivot(center));
       }
 
       for (int i = 1; i < S.size(); i++) {
         Command command = S.get(i);
         Position center = calculateCenter(command);
-        matrixList.add(matrixList.get(i - 1).multiple(Matrix33.createMatrixPivot(center)));
+        matrixList.add(matrixList.get(i - 1).multiple(Matrix33.createMatrixWithPivot(center)));
       }
     }
 
@@ -229,6 +236,11 @@ public class Main {
       L.forEach(position -> solve(position));
     }
 
+    /**
+     * Find the largest index of command, so that position is still in Square
+     * @param position
+     * @return
+     */
     private int binarySearch(Position position) {
       int result = -1;
       int left = 0;
@@ -246,6 +258,10 @@ public class Main {
       return result;
     }
 
+    /**
+     * Calculate and Print result to console.
+     * @param position
+     */
     private void solve(Position position) {
       int index = binarySearch(position);
       if (debug) {
