@@ -20,8 +20,8 @@ public class Main {
     }
 
     Position applyMatrix(Matrix33 matrix) {
-      int x = this.x * matrix.a[0][0] + this.y * matrix.a[0][1] + matrix.a[0][2];
-      int y = this.x * matrix.a[1][0] + this.y * matrix.a[1][1] + matrix.a[1][2];
+      int x = this.x * matrix.a[0][0] + this.y * matrix.a[1][0] + matrix.a[2][0];
+      int y = this.x * matrix.a[0][1] + this.y * matrix.a[1][1] + matrix.a[2][1];
       return new Position(x, y);
     }
 
@@ -75,18 +75,23 @@ public class Main {
 
     /**
      *
-     * @param k pivot point
+     * @param (p, q) is pivot point
      * @return matrix for Composite Transformation:
-     *    90 degree rotation of a point(x, y) about a pivot point(k/2, k/2)
-          |0   1   0|
-          |-1  0   0|
-          |K   0   1|
+     *    90 degree rotation of a point(x, y) about a pivot point(p, q)
+          | 0      1    0|
+          |-1      0    0|
+          |p+q   -p+q   1|
+
+     and |x y 1| * Matrix = |x' y' 1|
      */
-    static Matrix33 createMatrixK(int k) {
+    static Matrix33 createMatrixK(int p, int q) {
       Matrix33 matrix = new Matrix33();
       matrix.a[0][1] = 1;
+
       matrix.a[1][0] = -1;
-      matrix.a[2][0] = k;
+
+      matrix.a[2][0] = p + q;
+      matrix.a[2][1] = -p + q;
       matrix.a[2][2] = 1;
       return matrix;
     }
@@ -122,13 +127,18 @@ public class Main {
     process(N, L, S);
   }
 
-  void test() {
-//    Matrix33 matrix33 = Matrix33.createMatrixK(1000);
-//    System.out.println(matrix33);
-//    for (int i = 0; i < 1000; i++) {
-//      matrix33 = matrix33.multiple(Matrix33.createMatrixK(1000));
-//      System.out.println(matrix33);
-//    }
+  void testMutipleMatrix() {
+    Matrix33 matrix33 = Matrix33.createMatrixK(1000, 10);
+    System.out.println(matrix33);
+    for (int i = 0; i < 1000; i++) {
+      matrix33 = matrix33.multiple(Matrix33.createMatrixK(1000, 10));
+      System.out.println(matrix33);
+    }
+  }
+
+  void testApplyMatrix() {
+    Position position = new Position(4 , 3);
+    System.out.println(position.applyMatrix(Matrix33.createMatrixK(3, 2)));
   }
 
 
@@ -136,7 +146,8 @@ public class Main {
 
   public static void main(String[] args) {
 //    new Main().run();
-    new Main().test();
+//    new Main().testMutipleMatrix();
+    new Main().testApplyMatrix();
   }
 
 
