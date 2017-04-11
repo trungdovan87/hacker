@@ -1,5 +1,15 @@
 /**
- * We
+ * We use Coordinate System like this:
+ *    0
+ *    .--------->x
+ *    |
+ *    |
+ *    |
+ *    | y
+ *
+ * And we use 2 algorithm: Matrix Multiplication + Binary Search
+ * Complex of this Solution is: n * log(n) = L * log(S)
+ *
  */
 
 import java.util.ArrayList;
@@ -9,121 +19,12 @@ import java.util.stream.IntStream;
 
 public class Main {
 
-  static class Position {
-    int x, y;
+  static boolean debug = false;
 
-    Position(int x, int y) {
-      this.x = x;
-      this.y = y;
-    }
-
-    /**
-     * @param matrix Matrix Transformer.
-     * @return next Position after transformation
-     * idea: |x y 1| x Matrix = |x' y' 1|
-     */
-    Position applyMatrix(Matrix33 matrix) {
-      int x = this.x * matrix.a[0][0] + this.y * matrix.a[1][0] + matrix.a[2][0];
-      int y = this.x * matrix.a[0][1] + this.y * matrix.a[1][1] + matrix.a[2][1];
-      return new Position(x, y);
-    }
-
-    @Override
-    public String toString() {
-      return String.format("(%d, %d)", x, y);
-    }
-  }
-
-  static class Command {
-    int a, b, d;
-
-    Command(int a, int b, int d) {
-      this.a = a;
-      this.b = b;
-      this.d = d;
-    }
-  }
-
-  static class Matrix33 {
-    int[][] a = new int[3][3];
-
-    Matrix33 multiple(Matrix33 matrix) {
-      Matrix33 result = new Matrix33();
-      for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++) {
-          int tmp = 0;
-          for (int p = 0; p < 3; p++) {
-            tmp += this.a[i][p] * matrix.a[p][j];
-          }
-          result.a[i][j] = tmp;
-        }
-      return result;
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder builder = new StringBuilder();
-      builder.append("[");
-      IntStream.range(0, 3).forEach(i -> {
-        builder.append("{");
-        IntStream.range(0, 3).forEach(j -> {
-          builder.append(this.a[i][j] + " ");
-        });
-        builder.append("} ");
-      });
-
-      builder.append("]\n");
-      return builder.toString();
-    }
-
-    /**
-     *
-     * @param (p, q) is pivot point
-     * @return matrix for Composite Transformation:
-     *    90 degree rotation of a point(x, y) about a pivot point(p, q)
-     *     | 0      1    0|
-     *     |-1      0    0|
-     *     |p+q   -p+q   1|
-     *
-     *    and |x y 1| * Matrix = |x' y' 1|
-     */
-    static Matrix33 createMatrixPQ(int p, int q) {
-      Matrix33 matrix = new Matrix33();
-      matrix.a[0][1] = 1;
-
-      matrix.a[1][0] = -1;
-
-      matrix.a[2][0] = p + q;
-      matrix.a[2][1] = -p + q;
-      matrix.a[2][2] = 1;
-      return matrix;
-    }
-
-    static Matrix33 createMatrixPivot(Position center) {
-      return createMatrixPQ(center.x, center.y);
-    }
-  }
-
-  /**
-   * a, b, d is always even.
-   */
-  Position calculateCenter(Command command){
-    return new Position(command.a + command.d / 2, command.b + command.d / 2);
-  }
-
-  void process(int N, List<Position> L, List<Command> S) {
-    List<Matrix33> matrixList = new ArrayList<>(S.size());
-    if (!S.isEmpty()) {
-      Command command = S.get(0);
-      Position center = calculateCenter(command);
-      matrixList.add(Matrix33.createMatrixPivot(center));
-    }
-
-    for (int i = 1; i < S.size(); i++) {
-      Command command = S.get(0);
-      Position center = calculateCenter(command);
-      matrixList.add(matrixList.get(i - 1).multiple(Matrix33.createMatrixPivot(center)));
-    }
+  public static void main(String[] args) {
+    new Main().run();
+//    new Main().testMutipleMatrix();
+//    new Main().testApplyMatrix();
   }
 
   void run() {
@@ -163,7 +64,7 @@ public class Main {
         System.out.println(String.format("x, y = %d, %d", x, y));
       }
     }
-    process(N, L, S);
+    new Problem().process(L, S);
   }
 
   void testMutipleMatrix() {
@@ -176,7 +77,7 @@ public class Main {
   }
 
   void testApplyMatrix() {
-    Position position = new Position(5 * 2 , 1 * 2);
+    Position position = new Position(5 * 2, 1 * 2);
     System.out.println(position);
     Matrix33 m1 = Matrix33.createMatrixPQ(3 * 2, 2 * 2);
     Position position1 = position.applyMatrix(m1);
@@ -189,14 +90,163 @@ public class Main {
     System.out.println("----- Final: " + position.applyMatrix(m1.multiple(m2)));
   }
 
+  static class Position {
+    int x, y;
 
-  static boolean debug = true;
+    Position(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
 
-  public static void main(String[] args) {
-    new Main().run();
-//    new Main().testMutipleMatrix();
-//    new Main().testApplyMatrix();
+    /**
+     * @param matrix Matrix Transformer.
+     * @return next Position after transformation
+     * idea: |x y 1| x Matrix = |x' y' 1|
+     */
+    Position applyMatrix(Matrix33 matrix) {
+      int x = this.x * matrix.a[0][0] + this.y * matrix.a[1][0] + matrix.a[2][0];
+      int y = this.x * matrix.a[0][1] + this.y * matrix.a[1][1] + matrix.a[2][1];
+      return new Position(x, y);
+    }
+
+    @Override
+    public String toString() {
+      return String.format("(%d, %d)", x, y);
+    }
   }
 
+  static class Command {
+    int a, b, d;
 
+    Command(int a, int b, int d) {
+      this.a = a;
+      this.b = b;
+      this.d = d;
+    }
+  }
+
+  static class Matrix33 {
+    int[][] a = new int[3][3];
+
+    /**
+     * @param (p,q) is pivot point
+     * @return matrix for Composite Transformation:
+     * 90 degree rotation of a point(x, y) about a pivot point(p, q)
+     * | 0      1    0|
+     * |-1      0    0|
+     * |p+q   -p+q   1|
+     * <p>
+     * and |x y 1| * Matrix = |x' y' 1|
+     */
+    static Matrix33 createMatrixPQ(int p, int q) {
+      Matrix33 matrix = new Matrix33();
+      matrix.a[0][1] = 1;
+
+      matrix.a[1][0] = -1;
+
+      matrix.a[2][0] = p + q;
+      matrix.a[2][1] = -p + q;
+      matrix.a[2][2] = 1;
+      return matrix;
+    }
+
+    static Matrix33 createMatrixPivot(Position center) {
+      return createMatrixPQ(center.x, center.y);
+    }
+
+    Matrix33 multiple(Matrix33 matrix) {
+      Matrix33 result = new Matrix33();
+      for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++) {
+          int tmp = 0;
+          for (int p = 0; p < 3; p++) {
+            tmp += this.a[i][p] * matrix.a[p][j];
+          }
+          result.a[i][j] = tmp;
+        }
+      return result;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("[");
+      IntStream.range(0, 3).forEach(i -> {
+        builder.append("{");
+        IntStream.range(0, 3).forEach(j -> {
+          builder.append(this.a[i][j] + " ");
+        });
+        builder.append("} ");
+      });
+
+      builder.append("]\n");
+      return builder.toString();
+    }
+  }
+
+  static class Problem {
+    List<Matrix33> matrixList;
+    List<Position> L;
+    List<Command> S;
+
+    // check w
+    private static boolean isInSquare(Position position, Command cmd) {
+      return (position.x >= cmd.a &&  position.x <= cmd.a + cmd.d && position.y >= cmd.b && position.y <= cmd.b + cmd.d);
+    }
+
+    /**
+     * a, b, d is always even.
+     */
+    private Position calculateCenter(Command command) {
+      return new Position(command.a + command.d / 2, command.b + command.d / 2);
+    }
+
+    private void init(List<Position> L, List<Command> S) {
+      this.matrixList = new ArrayList<>(S.size());
+      if (!S.isEmpty()) {
+        Command command = S.get(0);
+        Position center = calculateCenter(command);
+        matrixList.add(Matrix33.createMatrixPivot(center));
+      }
+
+      for (int i = 1; i < S.size(); i++) {
+        Command command = S.get(i);
+        Position center = calculateCenter(command);
+        matrixList.add(matrixList.get(i - 1).multiple(Matrix33.createMatrixPivot(center)));
+      }
+    }
+
+    void process(List<Position> L, List<Command> S) {
+      this.L = L;
+      this.S = S;
+      init(L, S);
+      L.forEach(position -> solve(position));
+    }
+
+    private int binarySearch(Position position) {
+      int result = -1;
+      int left = 0;
+      int right = S.size() - 1;
+      while (left <= right) {
+        int mid = (left + right) / 2;
+        Position next = position.applyMatrix(matrixList.get(mid));
+        if (isInSquare(next, S.get(mid))) {
+          result = mid;
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+      return result;
+    }
+
+    private void solve(Position position) {
+      int index = binarySearch(position);
+      if (debug) {
+        System.out.println("index: " + index);
+      }
+      Position result = index < 0 ? position : position.applyMatrix(matrixList.get(index));
+      System.out.println(String.format("%d %d", result.y / 2 + 1, result.x / 2 + 1));
+    }
+  }
 }
