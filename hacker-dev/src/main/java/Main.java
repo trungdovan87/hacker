@@ -8,7 +8,9 @@
  *    | y
  *
  * And we use 2 algorithm: Matrix Multiplication + Binary Search
- * Complex of this Solution is: n * log(n) = L * log(S)
+ * - Complex of this Solution is: n * log(n) = L * log(S)
+ * - In Worst Case, it take 0.5s
+ *
  *
  */
 
@@ -18,16 +20,17 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Main {
-
+// set debug = true to log console
   static boolean debug = false;
 
   public static void main(String[] args) {
     new Main().run();
-//    new Main().testMutipleMatrix();
-//    new Main().testApplyMatrix();
+//    uncomment to test in Worst Case.
+//    new Main().testWorstCase();
   }
 
   void run() {
+    // INPUT
     Scanner scanner = new Scanner(System.in);
     int N = scanner.nextInt();
     int s = scanner.nextInt();
@@ -67,29 +70,32 @@ public class Main {
     new Problem().process(L, S);
   }
 
-  void testMutipleMatrix() {
-    Matrix33 matrix33 = Matrix33.createMatrixPQ(1000, 10);
-    System.out.println(matrix33);
-    for (int i = 0; i < 1000; i++) {
-      matrix33 = matrix33.multiple(Matrix33.createMatrixPQ(1000, 10));
-      System.out.println(matrix33);
+  /**
+   * TEST for Worst Case.
+   */
+  void testWorstCase() {
+    System.out.println("********** TEST for WORST CASE");
+    System.out.println("-- generating INPUT....");
+
+    int ten7 = 10000000; // 10^7
+    int ten5 = 100000; // 10^5
+//    ten5 = 100;
+    List<Command> S = new ArrayList<>();
+
+    List<Position> L = new ArrayList<>();
+    for (int i = 0; i < ten5; i++) {
+      S.add(new Command(0, 0, 2 * ten7));
+      L.add(new Position(10 * 2, 20 * 2));
     }
+
+    System.out.println("-- running...");
+    long now = System.currentTimeMillis();
+    new Problem().process(L, S);
+
+    System.out.println("-- Done!!!!");
+    System.out.println(String.format("-- Time: %d (ms)", (System.currentTimeMillis() - now)));
   }
-
-  void testApplyMatrix() {
-    Position position = new Position(5 * 2, 1 * 2);
-    System.out.println(position);
-    Matrix33 m1 = Matrix33.createMatrixPQ(3 * 2, 2 * 2);
-    Position position1 = position.applyMatrix(m1);
-    System.out.println(position1);
-
-    Matrix33 m2 = Matrix33.createMatrixPQ(7, 5);
-    Position position2 = position1.applyMatrix(m2);
-    System.out.println(position2);
-
-    System.out.println("----- Final: " + position.applyMatrix(m1.multiple(m2)));
-  }
-
+  
   static class Position {
     int x, y;
 
@@ -130,12 +136,12 @@ public class Main {
 
     /**
      * @param (p,q) is pivot point
-     * @return matrix for Composite Transformation:
-     * 90 degree rotation of a point(x, y) about a pivot point(p, q)
-     * | 0      1    0|
-     * |-1      0    0|
-     * |p+q   -p+q   1|
-     * <p>
+     * @return matrix for Transformation <br/>
+     * 90 degree rotation of a point(x, y) about a pivot point(p, q) <br/>
+     * | 0      1    0| <br/>
+     * |-1      0    0| <br/>
+     * |p+q   -p+q   1 |<br/>
+     * <br/>
      * and |x y 1| * Matrix = |x' y' 1|
      */
     static Matrix33 createMatrixPQ(int p, int q) {
