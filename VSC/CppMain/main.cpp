@@ -8,6 +8,7 @@ using namespace std;
 
 bool debug = true;
 
+// Link: http://www.geeksforgeeks.org/modular-exponentiation-power-in-modular-arithmetic/
 long power(long x, long y, int p)
 {
     long res = 1;      // Initialize result
@@ -54,6 +55,7 @@ long phi(long n)
     return (long)result;
 }
 
+// Link: http://www.geeksforgeeks.org/eulers-totient-function/
 long phi2(long n)
 {    
     long result = n;   // Initialize result as n
