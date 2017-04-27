@@ -1,12 +1,32 @@
 /*
     link: https://www.hackerearth.com/challenge/competitive/april-circuits-17/algorithm/fredo-and-maths-1/
-    point: 74/10
+    point: 87/10
 */
 
 #include <iostream>
 using namespace std;
 
 bool debug = true;
+
+long power(long x, long y, int p)
+{
+    long res = 1;      // Initialize result
+ 
+    x = x % p;  // Update x if it is more than or 
+                // equal to p
+ 
+    while (y > 0)
+    {
+        // If y is odd, multiply x with result
+        if (y & 1)
+            res = (res*x) % p;
+ 
+        // y must be even now
+        y = y>>1; // y = y/2
+        x = (x*x) % p;  
+    }
+    return res;
+}
 
 long phi(long n)
 {
@@ -78,37 +98,53 @@ long muMod(long x, long k, long m) {
     }
 }
 
-// long findMod1(long x, long m) {
-//     int mod = 1;
-//     for (int i = 1; i <= m - 1; i++) {
-//         mod = nhanMod(mod, x, m);
-//         if (mod == 1)
-//             return i;
-//     }
-//     throw 10;
-// }
-
 long f(long x, long k, long m) {
     if (k == 0)
         return 1;
     long index = phi2(m);
     if (index == 1)
         return 1;        
-    return muMod(x, f(x, k - 1, index), m);
+    return power(x, f(x, k - 1, index), m);
 }
 
 long calculate(long x, long k, long m) {
-    if (x % m == 0)
+    if (m == 1)
         return 0;
     return f(x, k, m);
 }
 
+int arr[1000000];
+// int arr[20];
+int count;
+long tinh(long x, long k, long m) {
+    if (m == 1)
+        return 0;
+
+    count = 1;
+    arr[0] = m;
+    do {
+        arr[count] = phi(arr[count-1]);
+        count++;
+    } while (arr[count - 1] != 1 && count <= k);
+    long tmp = x;
+    if (count = 1) {
+        return x % m;
+    }
+    for (int i = count - 1; i >= 1; i--) {
+        tmp = power(x, tmp % arr[i], arr[i - 1]);
+    }
+    return tmp;
+}
+
 void input() {
-    long T, m, k, x;
+    // cout << tinh(5, 4, 3) << endl;
+
+    long T, m, k, x;    
     cin >> T;
     for (int i = 0; i < T; i++) {
         cin >> x >> k >> m;
-        cout<< calculate(x, k, m) << endl;
+        // cout<< calculate(x, k, m) << endl;
+        cout<< tinh(x, k, m) << endl;
     }
 }
 
