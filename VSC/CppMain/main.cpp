@@ -1,6 +1,6 @@
 /*
     link: https://www.hackerearth.com/challenge/competitive/april-circuits-17/algorithm/fredo-and-maths-1/
-    point: 4/10
+    point: 74/10
 */
 
 #include <iostream>
@@ -34,6 +34,31 @@ long phi(long n)
     return (long)result;
 }
 
+long phi2(long n)
+{    
+    long result = n;   // Initialize result as n
+ 
+    // Consider all prime factors of n and subtract their
+    // multiples from result
+    for (long p=2; p*p<=n; ++p)
+    {
+        // Check if p is a prime factor.
+        if (n % p == 0)
+        {
+            // If yes, then update n and result 
+            while (n % p == 0)
+                n /= p;
+            result -= result / p;
+        }
+    }
+ 
+    // If n has a prime factor greater than sqrt(n)
+    // (There can be at-most one such prime factor)
+    if (n > 1)
+        result -= result / n;
+    return result;
+}
+
 long sqrMod(long x, long m) {
     return (x * x) % m;
 }
@@ -53,20 +78,22 @@ long muMod(long x, long k, long m) {
     }
 }
 
-long findMod1(long x, long m) {
-    int mod = 1;
-    for (int i = 1; i <= m - 1; i++) {
-        mod = nhanMod(mod, x, m);
-        if (mod == 1)
-            return i;
-    }
-    throw 10;
-}
+// long findMod1(long x, long m) {
+//     int mod = 1;
+//     for (int i = 1; i <= m - 1; i++) {
+//         mod = nhanMod(mod, x, m);
+//         if (mod == 1)
+//             return i;
+//     }
+//     throw 10;
+// }
 
 long f(long x, long k, long m) {
-    long index = phi(m);
-    if (index == 1)
+    if (k == 0)
         return 1;
+    long index = phi2(m);
+    if (index == 1)
+        return 1;        
     return muMod(x, f(x, k - 1, index), m);
 }
 
