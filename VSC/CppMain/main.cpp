@@ -145,8 +145,8 @@ void input() {
     cin >> T;
     for (int i = 0; i < T; i++) {
         cin >> x >> k >> m;
-        // cout<< calculate(x, k, m) << endl;
-        cout<< tinh(x, k, m) << endl;
+        cout<< calculate(x, k, m) << endl;
+        //cout<< tinh(x, k, m) << endl;
     }
 }
 
