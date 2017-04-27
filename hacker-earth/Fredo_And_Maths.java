@@ -1,6 +1,7 @@
 /*
     link: https://www.hackerearth.com/challenge/competitive/april-circuits-17/algorithm/fredo-and-maths-1/
-    point: 100/100
+    point: 48/100
+    Timout, please use C++
 */
 
 import java.util.*;
