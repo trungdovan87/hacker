@@ -1,3 +1,8 @@
+/*
+Tinh dien tich bao trum cua 1 day cac hinh chu nhat
+ */
+
+
 import java.util.*;
 
 public class Main {
