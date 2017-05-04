@@ -1,5 +1,5 @@
 /*
-Tinh dien tich bao trum cua 1 day cac hinh chu nhat
+Tinh dien tich bao trum cua 1 day cac hinh chu nhat (co canh song song voi truc Ox, Oy)
  */
 
 
