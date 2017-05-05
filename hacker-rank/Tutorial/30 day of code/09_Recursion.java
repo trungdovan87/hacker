@@ -12,14 +12,14 @@ public class Main {
         new Main().run();
     }
 
-    int f(int n) {
+    int factorial(int n) {
         if (n <= 1) return 1;
-        return n * f(n - 1);
+        return n * factorial(n - 1);
     }
 
     void run() {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt();
-        System.out.println(f(n));
+        System.out.println(factorial(n));
     }
 }
