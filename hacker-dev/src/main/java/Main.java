@@ -3,36 +3,26 @@
     point: 100/100
 */
 
-import java.util.*;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
 
 public class Main {
-    static boolean debug = false;
 
-    static int howManyGames(int p, int d, int m, int s) {
-        // Return the number of games you can buy
-        int count = 0;
-        int sum = 0;
-        int now = p;
-        while (true) {
-            if (sum + now <= s) {
-                count++;
-                sum = sum + now;
-                now = now - d < m ? m : now -d;
-            } else {
+    private static final int DEFAULT_NO_THREADS=10;
+    private static final String DEFAULT_SCHEMA="default";
+    public static void main(String[] args) throws Exception {
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        //register the MBean
+        SystemConfig mBean = new SystemConfig(DEFAULT_NO_THREADS, DEFAULT_SCHEMA);
+        ObjectName name = new ObjectName("com.journaldev.jmx:type=SystemConfig2");
+        mbs.registerMBean(mBean, name);
+        do{
+            Thread.sleep(3000);
+            int count = (int) mbs.getAttribute(name, "ThreadCount");
+            System.out.println("count: " + count);
+            if (count <= 0)
                 break;
-            }
-        }
-        return count;
-    }
-
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        int p = in.nextInt();
-        int d = in.nextInt();
-        int m = in.nextInt();
-        int s = in.nextInt();
-        int answer = howManyGames(p, d, m, s);
-        System.out.println(answer);
-        in.close();
+        }while(true);
     }
 }
