@@ -1,4 +1,5 @@
 /*
+    title: Sum of N
     link: https://leetcode.com/problems/palindrome-number/description/
     point: 100/100
 */
