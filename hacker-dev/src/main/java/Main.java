@@ -6,15 +6,23 @@
 import java.util.*;
 
 public class Main {
+    int sum(int n) {
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            sum += i;
+        }
+        return sum;
+    }
 
-    public boolean isPalindrome(int x) {
-        String s = String.valueOf(x);
-        String reverse = new StringBuilder(s).reverse().toString();
-        return s.equals(reverse);
+    void run() {
+        System.out.println("calculate sum from 1 to n");
+        System.out.println("input n:");
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        System.out.println("sum is: " + sum(n));
     }
 
     public static void main(String[] args) {
-        boolean result = new Main().isPalindrome(-12321);
-        System.out.println(result);
+        new Main().run();
     }
 }
