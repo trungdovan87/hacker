@@ -5,14 +5,12 @@
 */
 
 import java.util.Scanner;
+import java.util.function.Function;
 
 public class Main {
-    int ten5 = 100000;
+    boolean debug = false;
 
-    @FunctionalInterface
-    interface Condition {
-        boolean ifTrue(int x);
-    }
+    int ten5 = 100000;
 
     int m, n;
     int[][] a;
@@ -29,12 +27,12 @@ public class Main {
         }
     }
 
-    int calculate(Condition condition) {
+    int calculate(Function<Integer, Boolean> condition) {
         int[][] q = new int[m + 1][n + 1];
         q[0][1] = 1;
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
-                if (condition.ifTrue(a[i][j])) {
+                if (condition.apply(a[i][j])) {
                     q[i][j] = (q[i - 1][j] + q[i][j - 1]) % ten5;
                 }
             }
@@ -51,9 +49,30 @@ public class Main {
         System.out.println(result);
     }
 
+    void inputTest() {
+
+        final int MAX = 5000;
+        m = MAX;
+        n = MAX;
+        a = new int[m + 1][n + 1];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                a[i][j] = 1;
+            }
+        }
+        a[1][1] = 9;
+        a[m][n] = 9;
+
+    }
+
     void run() {
+        long time = System.currentTimeMillis();
         input();
+//        inputTest();
         process();
+        if (debug) {
+            System.out.println("take " + (System.currentTimeMillis() - time) + " ms");
+        }
     }
 
     public static void main(String[] args) {
