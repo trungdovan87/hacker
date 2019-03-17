@@ -3,16 +3,16 @@ package com.kamereo.account.problem;
 import java.util.List;
 
 public class Graph {
-    private int n;
+    private final int n;
     private int[] pre;
     private int[] end;
     private int[] w;
     private int kw;
-    private List<Integer>[] g;
+    private final List<Integer>[] edges;
 
-    public Graph(List<Integer>[] g) {
-        this.g = g;
-        n = g.length;
+    public Graph(List<Integer>[] edges) {
+        this.edges = edges;
+        n = edges.length;
     }
 
     public void calculateOrderTree() {
@@ -44,8 +44,8 @@ public class Graph {
     private void dfs(int v, int pr) {
         pre[v] = kw;
         w[kw++] = v;
-        for (int j = 0; j < g[v].size(); j++) {
-            int u = g[v].get(j);
+        for (int j = 0; j < edges[v].size(); j++) {
+            int u = edges[v].get(j);
             if (u != pr) {
                 dfs(u, v);
             }
