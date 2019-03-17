@@ -1,3 +1,10 @@
+/***
+https://codeforces.com/problemset/problem/384/E
+https://codeforces.com/blog/entry/10476
+
+https://codeforces.com/contest/620/problem/E
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
