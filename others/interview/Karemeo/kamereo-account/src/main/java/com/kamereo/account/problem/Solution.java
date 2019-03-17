@@ -1,9 +1,10 @@
 package com.kamereo.account.problem;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import com.kamereo.account.lib.VisibleForTesting;
+
+import java.io.*;
+import java.util.List;
+import java.util.Set;
 
 public class Solution {
     private static final String CEO = "CEO";
@@ -12,15 +13,25 @@ public class Solution {
     private static final String QUERY = "QUERY";
 
     private void printPermission(Set<String> permissions) {
-        System.out.println(String.join(",", permissions));
+        getPrintStream().println(String.join(",", permissions));
     }
 
     private int convert(String line) {
         return CEO.equals(line) ? 0 : Integer.parseInt(line.trim());
     }
 
+    @VisibleForTesting
+    InputStream getInputStream() {
+        return System.in;
+    }
+
+    @VisibleForTesting
+    PrintStream getPrintStream() {
+        return System.out;
+    }
+
     public void run() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(getInputStream()));
         int n = Integer.parseInt(br.readLine().trim()) + 1;
 
         Problem problem = new Problem(n);
