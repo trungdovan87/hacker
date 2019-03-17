@@ -5,43 +5,73 @@ import java.util.Set;
 
 public class SegmentTree {
     private int n;
-    private Set<String>[] t;
+    private Set<String>[] tree;
 
     public SegmentTree(Set<String>[] x) {
         n = (int) Math.pow(2, Math.ceil(Math.log(x.length) / Math.log(2)));
-        t = new Set[2 * n];
-        System.arraycopy(x, 0, t, n, x.length);
+        tree = new Set[2 * n];
+        System.arraycopy(x, 0, tree, n, x.length);
         build();
     }
 
     private Set<String> combine(Set<String> a, Set<String> b) {
         Set<String> result = new HashSet<>();
-        if (a != null) result.addAll(a);
-        if (b != null) result.addAll(b);
+        if (a != null) {
+            result.addAll(a);
+        }
+        if (b != null) {
+            result.addAll(b);
+        }
         return result;
     }
 
-    // build the tree
+    /***
+     * init Segment Tree
+     */
     private void build() {
         for (int i = n - 1; i > 0; --i) {
-            t[i] = combine(t[i << 1], t[i << 1 | 1]);
+            tree[i] = combine(tree[i * 2], tree[i * 2 + 1]);
         }
     }
 
-    // set value at position p
-    public void modify(int p, Set<String> value) {
-        for (t[p += n] = value; p > 1; p >>= 1) {
-            t[p >> 1] = combine(t[p], t[p ^ 1]);
+    /**
+     * update value for position
+     * @param position
+     * @param value
+     */
+    public void modify(int position, Set<String> value) {
+        position += n;
+        tree[position] = value;
+        while (position > 1) {
+            tree[position / 2] = combine(tree[position], tree[position ^ 1]);
+            position /=  2;
         }
+
     }
 
-    // sum on interval [l, r)
-    public Set<String> query(int l, int r) {
-        Set<String> res = new HashSet<>();
-        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-            if ((l & 1) == 1) res = combine(res, t[l++]);
-            if ((r & 1) == 1) res = combine(res, t[--r]);
+    /**
+     * Sum on interval [left, right)
+     * @param left include left
+     * @param right exclude right
+     * @return
+     */
+    public Set<String> query(int left, int right) {
+        Set<String> result = new HashSet<>();
+        left += n;
+        right +=n;
+        while (left < right) {
+            if (left % 2 == 1) {
+                result = combine(result, tree[left]);
+                left++;
+            }
+            if (right % 2 == 1) {
+                right--;
+                result = combine(result, tree[right]);
+            }
+            left /= 2;
+            right /= 2;
         }
-        return res;
+
+        return result;
     }
 }
