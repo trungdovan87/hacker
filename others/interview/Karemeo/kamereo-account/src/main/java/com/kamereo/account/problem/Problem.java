@@ -3,73 +3,73 @@ package com.kamereo.account.problem;
 import java.util.*;
 
 public class Problem {
-    int n;
-    Set<String>[] p;
-    List<Integer>[] g;
+    private int size;
+    private Set<String>[] permissions;
+    private List<Integer>[] edges;
 
-    int[] pre;
-    int[] end;
-    private SegmentTree st;
+    private int[] pre;
+    private int[] end;
+    private SegmentTree tree;
 
     public Problem(int size) {
         init(size);
     }
 
     public void init(int size) {
-        this.n = size;
-        p = new Set[n];
-        g = new List[n];
+        this.size = size;
+        permissions = new Set[size];
+        edges = new List[size];
 
-        for (int i = 0; i < n; i++) {
-            p[i] = new HashSet<>();
-            g[i] = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            permissions[i] = new HashSet<>();
+            edges[i] = new ArrayList<>();
         }
     }
 
-    public void addPermission(int u, String... permisions) {
-        p[u].addAll(Arrays.asList(permisions));
+    public void addPermission(int u, String... permissions) {
+        this.permissions[u].addAll(Arrays.asList(permissions));
     }
 
-    public void addEdge(int u, int v) {
-        g[u].add(v);
-        g[v].add(u);
+    public void addEdge(int from, int to) {
+        edges[from].add(to);
+        edges[to].add(from);
     }
 
     public void process() {
-        Graph graph = new Graph(g);
+        Graph graph = new Graph(edges);
         graph.calculateOrderTree();
         pre = graph.getPreviousArray();
         end = graph.getEndArray();
-        Set<String>[] init = new Set[n];
-        for (int i = 0; i < n; i++) {
-            init[pre[i]] = p[i];
+        Set<String>[] init = new Set[size];
+        for (int i = 0; i < size; i++) {
+            init[pre[i]] = permissions[i];
         }
-        st = new SegmentTree(init);
-    }
-
-    private Set<String> calculatePermission(int u) {
-        return st.query(pre[u], end[u] + 1);
+        tree = new SegmentTree(init);
     }
 
     public List<Set<String>> calculateAll() {
         List<Set<String>> result = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < size; i++) {
             result.add(calculatePermission(i));
         }
         return result;
     }
 
-    public void commandAdd(int u, String permission) {
-        p[u].add(permission);
-        st.modify(pre[u], p[u]);
+    public void commandAdd(int user, String permission) {
+        permissions[user].add(permission);
+        tree.modify(pre[user], permissions[user]);
     }
 
-    public void commandRemove(int u, String permission) {
-        p[u].remove(permission);
-        st.modify(pre[u], p[u]);
+    public void commandRemove(int user, String permission) {
+        permissions[user].remove(permission);
+        tree.modify(pre[user], permissions[user]);
     }
 
-    public Set<String> commandQuery(int u) {
-        return calculatePermission(u);
+    public Set<String> commandQuery(int user) {
+        return calculatePermission(user);
+    }
+
+    private Set<String> calculatePermission(int user) {
+        return tree.query(pre[user], end[user] + 1);
     }
 }
