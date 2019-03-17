@@ -7,15 +7,15 @@ public class Problem {
     private Set<String>[] permissions;
     private List<Integer>[] edges;
 
-    private int[] pre;
-    private int[] end;
+    private int[] preArr;
+    private int[] endArr;
     private SegmentTree tree;
 
     public Problem(int size) {
         init(size);
     }
 
-    public void init(int size) {
+    private void init(int size) {
         this.size = size;
         permissions = new Set[size];
         edges = new List[size];
@@ -26,8 +26,8 @@ public class Problem {
         }
     }
 
-    public void addPermission(int u, String... permissions) {
-        this.permissions[u].addAll(Arrays.asList(permissions));
+    public void addPermission(int user, String... permissions) {
+        this.permissions[user].addAll(Arrays.asList(permissions));
     }
 
     public void addEdge(int from, int to) {
@@ -38,11 +38,11 @@ public class Problem {
     public void process() {
         Graph graph = new Graph(edges);
         graph.calculateOrderTree();
-        pre = graph.getPreviousArray();
-        end = graph.getEndArray();
+        preArr = graph.getPreviousArray();
+        endArr = graph.getEndArray();
         Set<String>[] init = new Set[size];
         for (int i = 0; i < size; i++) {
-            init[pre[i]] = permissions[i];
+            init[preArr[i]] = permissions[i];
         }
         tree = new SegmentTree(init);
     }
@@ -57,12 +57,12 @@ public class Problem {
 
     public void commandAdd(int user, String permission) {
         permissions[user].add(permission);
-        tree.modify(pre[user], permissions[user]);
+        tree.modify(preArr[user], permissions[user]);
     }
 
     public void commandRemove(int user, String permission) {
         permissions[user].remove(permission);
-        tree.modify(pre[user], permissions[user]);
+        tree.modify(preArr[user], permissions[user]);
     }
 
     public Set<String> commandQuery(int user) {
@@ -70,6 +70,6 @@ public class Problem {
     }
 
     private Set<String> calculatePermission(int user) {
-        return tree.query(pre[user], end[user] + 1);
+        return tree.query(preArr[user], endArr[user] + 1);
     }
 }
