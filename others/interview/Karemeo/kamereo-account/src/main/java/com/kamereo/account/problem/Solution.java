@@ -56,7 +56,7 @@ public class Solution {
                     break;
                 case QUERY:
                     u = convert(cmd[1]);
-                    printPermission(problem.calculatePermission(u));
+                    printPermission(problem.commandQuery(u));
                     break;
                 default:
                     quit = true;

@@ -47,7 +47,7 @@ public class Problem {
         st = new SegmentTree(init);
     }
 
-    public Set<String> calculatePermission(int u) {
+    private Set<String> calculatePermission(int u) {
         return st.query(pre[u], end[u] + 1);
     }
 
