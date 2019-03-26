@@ -1,4 +1,5 @@
 /***
+https://codeforces.com/blog/entry/23170?fbclid=IwAR3Er8UkZPbGRt8-a2W3aWqu0TW49g5qEwtMV2OBX54MAZrT8rOlXE9rBmA
 https://codeforces.com/problemset/problem/384/E
 https://codeforces.com/blog/entry/10476
 
